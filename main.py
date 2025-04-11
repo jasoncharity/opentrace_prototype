@@ -4,23 +4,17 @@ import os
 import time
 from datetime import datetime
 
+# === Shared subject path ===
 def get_subject_path():
     path = os.path.join(os.path.expanduser("~"), ".opentrace", "subject.json")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     return path
 
-# Write to disk
-with open(get_subject_path(), "w") as f:
-    json.dump(subject, f, indent=2)
+# === UI setup ===
+st.set_page_config(page_title="OpenTrace Briefing Generator", layout="centered")
+st.title("🧠 OpenTrace: OSINT Briefing Generator")
 
-# Confirm immediately
-with open(get_subject_path(), "r") as f:
-    confirmed = json.load(f)
-
-st.caption(f"✅ subject.json updated → {confirmed['name']}")
-st.set_page_config(page_title="OpenTrace Briefing Form", layout="centered")
-st.title("🧠 OpenTrace Briefing Form")
-
+# === Session state tracking ===
 if "stage" not in st.session_state:
     st.session_state.stage = 1
 
@@ -57,7 +51,9 @@ with st.form("subject_form"):
         try:
             with open(get_subject_path(), "w") as f:
                 json.dump(subject, f, indent=2)
+
             time.sleep(0.5)
+
             with open(get_subject_path(), "r") as f:
                 confirmed = json.load(f)
 
@@ -66,6 +62,7 @@ with st.form("subject_form"):
             st.caption(f"🧾 Confirmed subject: {confirmed['name']}")
             st.json(confirmed)
             st.session_state.stage = 2
+
         except Exception as e:
             st.error(f"❌ Failed to write subject.json: {e}")
 
