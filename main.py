@@ -9,8 +9,17 @@ def get_subject_path():
     os.makedirs(os.path.dirname(path), exist_ok=True)
     return path
 
-st.set_page_config(page_title="OpenTrace Briefing Generator", layout="centered")
-st.title("🧠 OpenTrace: OSINT Briefing Generator")
+# Write to disk
+with open(get_subject_path(), "w") as f:
+    json.dump(subject, f, indent=2)
+
+# Confirm immediately
+with open(get_subject_path(), "r") as f:
+    confirmed = json.load(f)
+
+st.caption(f"✅ subject.json updated → {confirmed['name']}")
+st.set_page_config(page_title="OpenTrace Briefing Form", layout="centered")
+st.title("🧠 OpenTrace Briefing Form")
 
 if "stage" not in st.session_state:
     st.session_state.stage = 1

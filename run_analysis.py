@@ -11,13 +11,15 @@ def get_subject_path():
     os.makedirs(os.path.dirname(path), exist_ok=True)
     return path
 
+def get_subject_path():
+    return os.path.join(os.path.expanduser("~"), ".opentrace", "subject.json")
+
 def load_subject():
     with open(get_subject_path(), "r") as f:
         return json.load(f)
 
-def load_json(filename):
-    with open(filename, "r") as f:
-        return json.load(f)
+        subject = load_subject()
+        print(f"🧪 Loaded subject: {subject['name']}")
 
 def call_gpt4(prompt):
     response = client.chat.completions.create(
